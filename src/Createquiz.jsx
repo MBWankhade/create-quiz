@@ -6,10 +6,12 @@ const Createquiz = () => {
     quizType: '',
     numQuestions: 1,
     questions: [{ question: '', options: ['', ''], correctOption: null, optionType: '', timer: '' }],
+    quizId: null, // New field to store the unique ID
   });
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showQuizDetails, setShowQuizDetails] = useState(true);
+  const [quizPublished, setQuizPublished] = useState(false);
 
   const handleQuizNameChange = (e) => {
     setQuizData({ ...quizData, quizName: e.target.value });
@@ -70,7 +72,7 @@ const Createquiz = () => {
   };
 
   const handleRemoveQuestion = (index) => {
-    if (index > 0 && index < quizData.numQuestions - 1) {
+    if (index > 0 && index <= quizData.numQuestions - 1) {
       const updatedQuestions = [...quizData.questions];
       updatedQuestions.splice(index, 1);
       setQuizData({ ...quizData, numQuestions: quizData.numQuestions - 1, questions: updatedQuestions });
@@ -125,9 +127,13 @@ const Createquiz = () => {
       return;
     }
 
-    // Send quizData to the backend
-    console.log('Quiz Data:', quizData);
-    // You can make an API call to send data to the backend here
+    // Generate a unique ID (8-10 characters)
+    const uniqueId = Math.random().toString(36).substr(2, 8);
+
+    // Update quizData with the unique ID
+    setQuizData({ ...quizData, quizId: uniqueId });
+    console.log(quizData)
+    setQuizPublished(true);
   };
 
   return (
@@ -156,7 +162,7 @@ const Createquiz = () => {
         </>
       )}
 
-      {!showQuizDetails && (
+      {!showQuizDetails && !quizPublished && (
         <>
           <button onClick={handleAddQuestion}>+ Add Question</button>
 
@@ -297,6 +303,13 @@ const Createquiz = () => {
 
           <button onClick={handleSubmit}>Submit</button>
         </>
+      )}
+
+      {quizPublished && (
+        <div>
+          <p>Congrats! Your Quiz is Published!</p>
+          <p>Your link is: <a href={`/${quizData.quizId}`}>{`/${quizData.quizId}`}</a></p>
+        </div>
       )}
     </div>
   );

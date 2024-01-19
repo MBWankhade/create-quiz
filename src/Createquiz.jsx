@@ -119,7 +119,7 @@ const Createquiz = () => {
       currentQuestion.options.some((option) => option.trim() === '') ||
       (quizData.quizType === 'qa' && currentQuestion.correctOption === null) || // Check for correct answer in Q&A type
       currentQuestion.optionType.trim() === '' ||
-      currentQuestion.timer.trim() === ''
+      (quizData.quizType === 'qa' && currentQuestion.timer.trim() === '')
     ) {
       alert('Please fill in all required fields for the current question.');
       return;
